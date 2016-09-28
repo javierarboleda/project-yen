@@ -10,24 +10,26 @@ import io.realm.annotations.Required;
  */
 public class TodoItem extends RealmObject {
 
-    @Required
-    private String mTitle;
+    public static final String TITLE = "title";
 
-    private Date mDate;
+    @Required
+    private String title;
+
+    private Date date;
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public void setTitle(String title) {
-        this.mTitle = title;
+        this.title = title;
     }
 
     public Date getDate() {
-        return mDate;
+        return date;
     }
 
     public void setDate(Date date) {
-        this.mDate = date;
+        this.date = date;
     }
 }

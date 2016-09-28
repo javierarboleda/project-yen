@@ -1,8 +1,6 @@
 package com.javierarboleda.projectyen.ui;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -10,54 +8,59 @@ import android.widget.TextView;
 import com.javierarboleda.projectyen.R;
 import com.javierarboleda.projectyen.data.TodoItem;
 
-import java.util.List;
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
 
 /**
  * Created on 9/28/16.
  */
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
+public class TodoAdapter extends RealmRecyclerViewAdapter<TodoItem, TodoAdapter.MyViewHolder> {
 
-    private final Context mContext;
-    private List<TodoItem> mTodoItems;
+    private final TodoListActivity mActivity;
 
-    public TodoAdapter(Context context, List<TodoItem> todoItems) {
-        mContext = context;
-        mTodoItems = todoItems;
+    public TodoAdapter(TodoListActivity activity, OrderedRealmCollection<TodoItem> data) {
+        super(activity, data, true);
+        mActivity = activity;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View todoItemView = inflater.inflate(R.layout.list_item_todo, parent, false);
 
-        return new ViewHolder(todoItemView);
+        MyViewHolder myViewHolder = new MyViewHolder(todoItemView);
+
+        return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        TodoItem todoItem = mTodoItems.get(position);
+    public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        TextView titleTextView = holder.titleTextView;
+        TodoItem todoItem = getData().get(position);
 
-        titleTextView.setText(todoItem.getTitle());
+        holder.data = todoItem;
+
+        holder.titleTextView.setText(todoItem.getTitle());
     }
 
-    @Override
-    public int getItemCount() {
-        return mTodoItems.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder
+            implements View.OnLongClickListener {
 
         public TextView titleTextView;
+        public TodoItem data;
 
-        public ViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
 
             titleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mActivity.deleteTodoItem(data);
+            return false;
         }
     }
 

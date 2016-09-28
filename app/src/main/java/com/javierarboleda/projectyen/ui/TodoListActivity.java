@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 
 public class TodoListActivity extends AppCompatActivity {
 
@@ -26,13 +27,6 @@ public class TodoListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ArrayList<TodoItem> mTodoItems;
     private Realm mRealm;
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +40,12 @@ public class TodoListActivity extends AppCompatActivity {
         initRecyclerView();
 
         initFab();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 
     private ArrayList<TodoItem> generateTodoItems(int itemsCount) {
@@ -65,11 +65,14 @@ public class TodoListActivity extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView todoRecyclerView = (RecyclerView) findViewById(R.id.todo_list_recycler_view);
 
-        TodoAdapter todoAdapter = new TodoAdapter(this, mTodoItems);
+        todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        TodoAdapter todoAdapter =
+                new TodoAdapter(this, mRealm.where(TodoItem.class).findAllAsync());
 
         todoRecyclerView.setAdapter(todoAdapter);
 
-        todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        todoRecyclerView.setHasFixedSize(true);
     }
 
     private void initFab() {
@@ -103,7 +106,7 @@ public class TodoListActivity extends AppCompatActivity {
         mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                TodoItem todoItem = new TodoItem();
+                TodoItem todoItem = realm.createObject(TodoItem.class);
                 todoItem.setTitle(title);
                 todoItem.setDate(date);
             }
@@ -122,4 +125,15 @@ public class TodoListActivity extends AppCompatActivity {
     }
 
 
+    public void deleteTodoItem(TodoItem item) {
+        final String id = item.getTitle();
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(TodoItem.class).equalTo(TodoItem.TITLE, id)
+                        .findAll()
+                        .deleteAllFromRealm();
+            }
+        });
+    }
 }
