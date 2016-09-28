@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -14,12 +15,24 @@ import com.javierarboleda.projectyen.R;
 import com.javierarboleda.projectyen.data.TodoItem;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import io.realm.Realm;
 
 public class TodoListActivity extends AppCompatActivity {
 
+    private final String TAG = TodoListActivity.class.getName();
+
     private RecyclerView mRecyclerView;
     private ArrayList<TodoItem> mTodoItems;
+    private Realm mRealm;
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +41,11 @@ public class TodoListActivity extends AppCompatActivity {
 
         mTodoItems = generateTodoItems(20);
 
+        mRealm = Realm.getDefaultInstance();
+
         initRecyclerView();
 
         initFab();
-
-
     }
 
     private ArrayList<TodoItem> generateTodoItems(int itemsCount) {
@@ -80,9 +93,32 @@ public class TodoListActivity extends AppCompatActivity {
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-
+                        addTodoItemToDb(input.toString(), null);
                     }
                 }).show();
+    }
+
+    private void addTodoItemToDb(final String title, final Date date) {
+
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                TodoItem todoItem = new TodoItem();
+                todoItem.setTitle(title);
+                todoItem.setDate(date);
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "New todoItem added to db: title = " + title + ", date = " + date);
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                Log.e(TAG, "Error when adding new todoItem to db: " + error.getMessage());
+            }
+        });
+
     }
 
 
