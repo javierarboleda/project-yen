@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="@dimen/todo_item_height">
 
     <TextView
         android:id="@+id/title_text_view"
@@ -10,6 +10,11 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/todo_item_padding"
         android:paddingBottom="@dimen/todo_item_padding"
+        android:paddingLeft="@dimen/todo_item_padding_left_right"
+        android:paddingRight="@dimen/todo_item_padding_left_right"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
         />
 
 </LinearLayout>

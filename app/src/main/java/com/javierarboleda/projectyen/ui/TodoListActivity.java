@@ -1,5 +1,6 @@
 package com.javierarboleda.projectyen.ui;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.javierarboleda.projectyen.R;
 import com.javierarboleda.projectyen.data.TodoItem;
+import com.javierarboleda.projectyen.util.Constants;
+import com.javierarboleda.projectyen.util.Mode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +76,9 @@ public class TodoListActivity extends AppCompatActivity {
         todoRecyclerView.setAdapter(todoAdapter);
 
         todoRecyclerView.setHasFixedSize(true);
+
+        todoRecyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
     }
 
     private void initFab() {
@@ -85,13 +91,38 @@ public class TodoListActivity extends AppCompatActivity {
                 showNewTodoDialog();
             }
         });
+        
+        newTodoFab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                openNewItemWithDetailsScreen();
+                return false;
+            }
+        });
 
+    }
+
+    private void openNewItemWithDetailsScreen() {
+        startTodoDetailsEditActivity(Mode.CREATE, null);
+    }
+
+    public void openEditItemScreen(String title) {
+        startTodoDetailsEditActivity(Mode.DETAILS, title);
+    }
+
+    private void startTodoDetailsEditActivity(Mode mode, String title) {
+        Intent intent = new Intent(this, TodoDetailsEditActivity.class);
+        intent.putExtra(Constants.MODE, mode);
+        if (mode == Mode.DETAILS) {
+            intent.putExtra(Constants.TITLE, title);
+        }
+        startActivity(intent);
     }
 
     private void showNewTodoDialog() {
 
         new MaterialDialog.Builder(this)
-                .title("Input todo item")
+                .title(R.string.new_todo_item_dialog)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
