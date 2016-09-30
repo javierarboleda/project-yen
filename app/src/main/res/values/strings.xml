@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Project Yen</string>
-    <string name="notes_label">NOTES</string>
+    <string name="notes_label">NOTES:</string>
     <string name="new_todo_item_dialog">Input todo item</string>
     <string name="new_todo_item">New todo item</string>
+    <string name="todo_task_label">TODO TASK:</string>
+    <string name="due_date_label">DUE DATE:</string>
+    <string name="input_note_text">Input note text</string>
+    <string name="edit_todo_name">Edit todo name</string>
 </resources>

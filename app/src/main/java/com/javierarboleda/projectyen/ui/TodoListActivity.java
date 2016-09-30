@@ -16,6 +16,7 @@ import com.javierarboleda.projectyen.R;
 import com.javierarboleda.projectyen.data.TodoItem;
 import com.javierarboleda.projectyen.util.Constants;
 import com.javierarboleda.projectyen.util.Mode;
+import com.javierarboleda.projectyen.util.RealmUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,7 +128,7 @@ public class TodoListActivity extends AppCompatActivity {
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        addTodoItemToDb(input.toString(), null);
+                        RealmUtil.addTodoItemToDb(mRealm, input.toString(), null);
                     }
                 }).show();
     }

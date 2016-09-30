@@ -2,6 +2,7 @@ package com.javierarboleda.projectyen.data;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Required;
 
@@ -14,8 +15,8 @@ public class TodoItem extends RealmObject {
 
     @Required
     private String title;
-
     private Date date;
+    private RealmList<Note> notes;
 
     public String getTitle() {
         return title;
@@ -31,5 +32,13 @@ public class TodoItem extends RealmObject {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public RealmList<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(RealmList<Note> notes) {
+        this.notes = notes;
     }
 }

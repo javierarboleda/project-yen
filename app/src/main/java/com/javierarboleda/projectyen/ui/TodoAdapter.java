@@ -66,16 +66,16 @@ public class TodoAdapter extends RealmRecyclerViewAdapter<TodoItem, TodoAdapter.
 
         holder.titleTextView.setText(todoItem.getTitle());
 
-        holder.titleTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mActivity.openEditItemScreen(todoItem.getTitle());
-            }
-        });
+//        holder.titleTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mActivity.openEditItemScreen(todoItem.getTitle());
+//            }
+//        });
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder
-            implements View.OnLongClickListener {
+            implements View.OnLongClickListener, View.OnClickListener {
 
         public TextView titleTextView;
         public TodoItem data;
@@ -86,6 +86,12 @@ public class TodoAdapter extends RealmRecyclerViewAdapter<TodoItem, TodoAdapter.
             titleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
 
             itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mActivity.openEditItemScreen(data.getTitle());
         }
 
         @Override

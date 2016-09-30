@@ -7,49 +7,84 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
+        android:id="@+id/details_linear_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/todo_task_label"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/details_title_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/details_title_padding_top"
+            android:paddingLeft="@dimen/details_title_text_view_left_padding"
             android:onClick="editTitle"
             android:clickable="true"
-            android:text="@string/new_todo_item"/>
+            android:textColor="@color/black"
+            android:text="@string/new_todo_item"
+            android:textSize="32sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/due_date_text_view_top_padding"
+            android:text="@string/due_date_label"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/date_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="by Sunday, April 13"/>
+            android:paddingTop="@dimen/date_text_view_top_padding"
+            android:paddingLeft="@dimen/date_text_view_left_padding"
+            android:clickable="true"
+            android:onClick="editDate"
+            android:text="by Sunday, April 13"
+            android:textSize="18sp"/>
+
 
         <TextView
             android:id="@+id/notes_label_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/notes_label"/>
-
+            android:paddingTop="@dimen/notes_text_view_top_padding"
+            android:text="@string/notes_label"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/todo_details_notes_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/todo_details_notes_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/recycler_view_padding_left_right"
-        android:paddingRight="@dimen/recycler_view_padding_left_right"
-        />
+
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/new_todo_fab"
+        android:id="@+id/new_note_fab"
         android:src="@drawable/ic_add_note_white"
         app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/todo_details_notes_recycler_view"
+        app:layout_anchor="@id/details_linear_layout"
         app:layout_anchorGravity="bottom|right|end"
         />
 
