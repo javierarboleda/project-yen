@@ -1,9 +1,9 @@
 package com.javierarboleda.projectyen.ui;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -12,20 +12,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.javierarboleda.projectyen.R;
 import com.javierarboleda.projectyen.data.Note;
 import com.javierarboleda.projectyen.data.TodoItem;
 import com.javierarboleda.projectyen.util.Constants;
 import com.javierarboleda.projectyen.util.Mode;
-import com.javierarboleda.projectyen.util.RealmUtil;
 
-import org.w3c.dom.Text;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
 
-public class TodoDetailsEditActivity extends AppCompatActivity {
+public class TodoDetailsEditActivity extends AppCompatActivity
+        implements CalendarDatePickerDialogFragment.OnDateSetListener {
 
     private final String TAG = TodoDetailsEditActivity.class.getName();
 
@@ -47,12 +48,19 @@ public class TodoDetailsEditActivity extends AppCompatActivity {
             titleTextView.setText(title);
             mTodoItem = mRealm.where(TodoItem.class)
                     .equalTo(TodoItem.TITLE, title).findFirst();
+
+            Date date = mTodoItem.getDate();
+
+            if (date != null) {
+                setDateTextView(date);
+            }
+
             initRecyclerView();
         }
         else {
             new MaterialDialog.Builder(this)
-                    .title(R.string.new_todo_item_dialog)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .title(R.string.enter_task_name)
+                    .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
                     .input("", "", new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
@@ -80,7 +88,8 @@ public class TodoDetailsEditActivity extends AppCompatActivity {
 
         new MaterialDialog.Builder(this)
                 .title(R.string.input_note_text)
-                .inputType(InputType.TYPE_CLASS_TEXT)
+                .positiveText(R.string.save_note)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
@@ -114,7 +123,7 @@ public class TodoDetailsEditActivity extends AppCompatActivity {
 
         new MaterialDialog.Builder(this)
                 .title(R.string.edit_todo_name)
-                .inputType(InputType.TYPE_CLASS_TEXT)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
@@ -157,14 +166,15 @@ public class TodoDetailsEditActivity extends AppCompatActivity {
                 TodoItem todoItem = bgRealm.createObject(TodoItem.class);
                 todoItem.setTitle(title);
                 todoItem.setDate(date);
-                mTodoItem = todoItem;
-                initRecyclerView();
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "New todoItem added to db: title = " + title + ", date = " + date);
                 updateTitleTextView(title);
+                mTodoItem = mRealm.where(TodoItem.class)
+                        .equalTo(TodoItem.TITLE, title).findFirst();
+                initRecyclerView();
             }
         }, new Realm.Transaction.OnError() {
             @Override
@@ -179,9 +189,37 @@ public class TodoDetailsEditActivity extends AppCompatActivity {
         titleTextView.setText(text);
     }
 
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear,
+                          int dayOfMonth) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, monthOfYear, dayOfMonth);
+        Date date = cal.getTime();
+
+        setDateTextView(date);
+
+        mRealm.beginTransaction();
+
+        mTodoItem.setDate(date);
+
+        mRealm.commitTransaction();
+    }
+
+    private void setDateTextView(Date date) {
+
+        SimpleDateFormat monthDayYearFormat = new SimpleDateFormat("MMM d, yyyy");
+
+        String dateText = monthDayYearFormat.format(date);
+
+        TextView dateTextView = (TextView) findViewById(R.id.date_text_view);
+        dateTextView.setText(dateText);
+    }
+
     public void editDate(View view) {
 
-
-
+        CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                .setOnDateSetListener(this);
+        cdp.show(getSupportFragmentManager(), TAG);
     }
 }

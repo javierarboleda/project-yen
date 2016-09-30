@@ -53,7 +53,7 @@
             android:paddingLeft="@dimen/date_text_view_left_padding"
             android:clickable="true"
             android:onClick="editDate"
-            android:text="by Sunday, April 13"
+            android:text="@string/no_due_date_message"
             android:textSize="18sp"/>
 
 

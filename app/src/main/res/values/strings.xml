@@ -1,10 +1,17 @@
 <resources>
-    <string name="app_name">Project Yen</string>
+    <string name="app_name">DO IT!</string>
+    <string name="title_activity_details_edit">Task Details</string>
     <string name="notes_label">NOTES:</string>
     <string name="new_todo_item_dialog">Input todo item</string>
     <string name="new_todo_item">New todo item</string>
     <string name="todo_task_label">TODO TASK:</string>
     <string name="due_date_label">DUE DATE:</string>
-    <string name="input_note_text">Input note text</string>
+    <string name="input_note_text">Add a note</string>
     <string name="edit_todo_name">Edit todo name</string>
+    <string name="no_due_date_message">Click to add a due date</string>
+    <string name="enter_task_name">Enter task name</string>
+    <string name="add_task">add task</string>
+    <string name="save_note">save note</string>
+    <string name="new_install_dialog_content">Tapping the add button will let you add a \'quick\' todo task to the list. Long pressing the add button will bring you to the add details page. Here you can add a due date and notes to your task. You can always update the title and due date, as well as add notes by clicking on any of the todo items</string>
+    <string name="welcome_dialog_title">WELCOME!\nNote: There are two ways to add a task!</string>
 </resources>

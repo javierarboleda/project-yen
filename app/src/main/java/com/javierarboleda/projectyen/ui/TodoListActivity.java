@@ -1,10 +1,10 @@
 package com.javierarboleda.projectyen.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -22,14 +22,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
-import io.realm.RealmAsyncTask;
 
 public class TodoListActivity extends AppCompatActivity {
 
     private final String TAG = TodoListActivity.class.getName();
 
-    private RecyclerView mRecyclerView;
-    private ArrayList<TodoItem> mTodoItems;
     private Realm mRealm;
 
     @Override
@@ -37,13 +34,25 @@ public class TodoListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
 
-        mTodoItems = generateTodoItems(20);
-
         mRealm = Realm.getDefaultInstance();
+
+        if (mRealm.isEmpty()) {
+            showNewInstallMessage();
+        }
 
         initRecyclerView();
 
         initFab();
+    }
+
+    private void showNewInstallMessage() {
+
+        new MaterialDialog.Builder(this)
+                .title(R.string.welcome_dialog_title)
+                .content(getString(R.string.new_install_dialog_content))
+                .positiveText("got it!")
+                .show();
+
     }
 
     @Override
@@ -123,8 +132,8 @@ public class TodoListActivity extends AppCompatActivity {
     private void showNewTodoDialog() {
 
         new MaterialDialog.Builder(this)
-                .title(R.string.new_todo_item_dialog)
-                .inputType(InputType.TYPE_CLASS_TEXT)
+                .title(R.string.new_todo_item_dialog).positiveText(R.string.add_task)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
                 .input("", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {

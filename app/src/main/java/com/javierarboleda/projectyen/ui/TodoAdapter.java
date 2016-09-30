@@ -65,13 +65,6 @@ public class TodoAdapter extends RealmRecyclerViewAdapter<TodoItem, TodoAdapter.
         holder.data = todoItem;
 
         holder.titleTextView.setText(todoItem.getTitle());
-
-//        holder.titleTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mActivity.openEditItemScreen(todoItem.getTitle());
-//            }
-//        });
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder
