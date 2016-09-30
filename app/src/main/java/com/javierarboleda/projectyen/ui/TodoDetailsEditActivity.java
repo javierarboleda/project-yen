@@ -124,7 +124,7 @@ public class TodoDetailsEditActivity extends AppCompatActivity
         new MaterialDialog.Builder(this)
                 .title(R.string.edit_todo_name)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
-                .input("", "", new MaterialDialog.InputCallback() {
+                .input("", title, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         updateTodoItemInDb(input.toString());
